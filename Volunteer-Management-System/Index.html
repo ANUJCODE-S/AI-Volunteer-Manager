@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Hub | Tech Summit 2025</title>
+   
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+   
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+    <style>
+      :root {
+        --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        --primary: #8E2DE2;
+        --secondary: #4A00E0;
+        --accent: #00d2ff;
+        --text-main: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.7);
+        --font-display: 'Space Grotesk', sans-serif;
+        --font-body: 'Inter', sans-serif;
+      }
+
+
+      * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+        background: var(--bg-gradient);
+        color: var(--text-main);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+
+      /* --- BACKGROUND AMBIANCE --- */
+      .blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.6;
+        animation: float 10s infinite alternate;
+      }
+      .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #8E2DE2; }
+      .blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #00d2ff; animation-delay: -5s; }
+
+
+      @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, 50px) scale(1.1); }
+      }
+
+
+      /* --- FLOATING NAVIGATION --- */
+      .nav-dock {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        padding: 10px 20px;
+        border-radius: 50px;
+        display: flex;
+        gap: 10px;
+        z-index: 1000;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      }
+
+
+      .nav-item {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+
+      .nav-item i { font-size: 16px; }
+
+
+      .nav-item:hover { color: white; background: rgba(255,255,255,0.1); }
+     
+      .nav-item.active {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+      }
+
+
+      /* --- LAYOUT --- */
+      .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+      }
+
+
+      .page {
+        display: none;
+        width: 100%;
+        max-width: 800px;
+        animation: pageFade 0.5s ease forwards;
+      }
+      .page.active { display: block; }
+
+
+      @keyframes pageFade {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+
+      /* --- PAGE 1: HERO --- */
+      .hero-section { text-align: center; }
+     
+      .hero-title {
+        font-family: var(--font-display);
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0 0 20px 0;
+        background: linear-gradient(to right, #fff, #00d2ff);
+        -webkit-text-fill-color: transparent;
+      }
+
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        line-height: 1.6;
+      }
+
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+
+      .stat-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        padding: 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+      }
+      .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--accent); display: block; }
+      .stat-label { font-size: 0.9rem; color: var(--text-muted); }
+
+
+      /* --- PAGE 2: STATUS PORTAL --- */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: var(--glass-shadow);
+        text-align: center;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+
+      .input-wrapper {
+        position: relative;
+        margin: 30px 0;
+      }
+
+
+      .modern-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid var(--glass-border);
+        padding: 18px 20px 18px 50px;
+        border-radius: 16px;
+        color: white;
+        font-size: 16px;
+        font-family: var(--font-body);
+        transition: 0.3s;
+      }
+
+
+      .modern-input:focus {
+        border-color: var(--accent);
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+      }
+
+
+      .input-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+      }
+
+
+      .glow-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        border: none;
+        border-radius: 16px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(74, 0, 224, 0.3);
+      }
+      .glow-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(74, 0, 224, 0.5); }
+      .glow-btn:disabled { opacity: 0.7; cursor: wait; }
+
+
+      /* --- TICKET RESULT --- */
+      #result-area { display: none; margin-top: 30px; }
+     
+      .ticket {
+        background: white;
+        color: #333;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+      }
+
+
+      .ticket-header {
+        background: var(--primary);
+        padding: 15px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+
+      .ticket-body { padding: 25px; text-align: left; }
+     
+      .role-label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; }
+      .role-title { font-size: 24px; font-weight: 800; color: #333; margin: 5px 0 15px 0; font-family: var(--font-display); }
+     
+      .ticket-meta { display: flex; gap: 20px; border-top: 1px dashed #ddd; padding-top: 15px; }
+      .meta-item { flex: 1; }
+      .meta-val { font-weight: 700; color: #333; display: block; }
+      .meta-lbl { font-size: 11px; color: #888; }
+
+
+      .ticket-footer {
+        background: #f8f9fa;
+        padding: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        border-top: 1px solid #eee;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .ticket-footer:hover { background: #e9ecef; color: var(--primary); }
+
+
+      /* --- PAGE 3: CONTACT --- */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+
+      .contact-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        padding: 30px;
+        border-radius: 24px;
+        text-align: center;
+        transition: 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+      }
+      .contact-card:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-5px);
+        border-color: var(--accent);
+      }
+
+
+      .icon-circle {
+        width: 60px; height: 60px;
+        background: linear-gradient(135deg, var(--accent), var(--secondary));
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px auto;
+        font-size: 24px; color: white;
+      }
+      .cc-title { color: white; font-weight: 600; margin-bottom: 5px; display: block; }
+      .cc-sub { color: var(--text-muted); font-size: 13px; }
+
+
+      @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+      /* Mobile Adjustments */
+      @media (max-width: 600px) {
+        .hero-title { font-size: 2.5rem; }
+        .stats-grid { grid-template-columns: 1fr; }
+        .nav-dock { width: 90%; justify-content: space-around; padding: 10px; }
+        .nav-item span { display: none; } /* Hide text, show icons only on mobile */
+        .nav-item i { font-size: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+
+    <div class="main-container">
+     
+      <div id="home" class="page active">
+        <div class="hero-section">
+          <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 10px; font-weight: 700;">Official Portal</div>
+          <h1 class="hero-title">Volunteer<br>Control Center</h1>
+          <p class="hero-subtitle">Manage your application, check your status, and get ready to make an impact at the biggest tech event of the year.</p>
+         
+          <button onclick="switchPage('status')" class="glow-btn" style="max-width: 250px;">
+            Check Application <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+          </button>
+
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-num">50+</span>
+              <span class="stat-label">Open Roles</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num">200+</span>
+              <span class="stat-label">Volunteers</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num">4d</span>
+              <span class="stat-label">To Launch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="status" class="page">
+        <div class="glass-panel">
+          <h2 style="font-family: var(--font-display); margin-bottom: 10px;">Check Status</h2>
+          <p style="color: var(--text-muted); font-size: 14px;">Enter your registered email ID to view your assignment ticket.</p>
+         
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="emailInput" class="modern-input" placeholder="name@example.com">
+          </div>
+
+
+          <button onclick="checkStatus()" id="checkBtn" class="glow-btn">
+            Track Application
+          </button>
+
+
+          <div id="result-area"></div>
+       
+        </div>
+      </div>
+
+
+      <div id="contact" class="page">
+        <h2 style="text-align: center; font-family: var(--font-display); margin-bottom: 40px;">Support Hub</h2>
+        <div class="contact-grid">
+         
+          <a href="#" class="contact-card">
+            <div class="icon-circle"><i class="fa-brands fa-whatsapp"></i></div>
+            <span class="cc-title">WhatsApp Admin</span>
+            <span class="cc-sub">Fastest Response</span>
+          </a>
+
+
+          <a href="anuj61016@gmail.com" class="contact-card">
+            <div class="icon-circle"><i class="fa-regular fa-envelope"></i></div>
+            <span class="cc-title">Email Support</span>
+            <span class="cc-sub">For Shift Changes</span>
+          </a>
+
+
+          <div class="contact-card">
+            <div class="icon-circle"><i class="fa-solid fa-location-dot"></i></div>
+            <span class="cc-title">Control Room</span>
+            <span class="cc-sub">Block B, Room 204</span>
+          </div>
+
+
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <nav class="nav-dock">
+      <div class="nav-item active" onclick="switchPage('home')">
+        <i class="fa-solid fa-house"></i> <span>Home</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('status')">
+        <i class="fa-solid fa-ticket"></i> <span>Status</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('contact')">
+        <i class="fa-solid fa-headset"></i> <span>Help</span>
+      </div>
+    </nav>
+
+
+    <script>
+      // Navigation Logic
+      function switchPage(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+        // Show target page
+        document.getElementById(pageId).classList.add('active');
+       
+        // Update Dock Styling
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        // Find the clicked item based on index logic or event bubbling (simplified here)
+        // For simplicity in this demo, we manually highlight based on function call order or UI state
+        // Re-selecting based on text content for this specific script structure:
+        const icons = {'home': 'fa-house', 'status': 'fa-ticket', 'contact': 'fa-headset'};
+        document.querySelectorAll('.nav-item').forEach(el => {
+           if(el.innerHTML.includes(icons[pageId])) el.classList.add('active');
+        });
+      }
+
+
+      // Backend Connection
+      function checkStatus() {
+        const email = document.getElementById('emailInput').value.trim();
+        const btn = document.getElementById('checkBtn');
+        const area = document.getElementById('result-area');
+
+
+        if(!email) { alert("Please enter an email address"); return; }
+
+
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Searching DB...';
+        btn.disabled = true;
+        area.style.display = 'none';
+
+
+        google.script.run
+          .withSuccessHandler(data => {
+            btn.innerHTML = 'Track Application';
+            btn.disabled = false;
+            area.style.display = 'block';
+
+
+            if(data.found) {
+              // SUCCESS TICKET
+              area.innerHTML = `
+                <div class="ticket">
+                  <div class="ticket-header">
+                    <i class="fa-solid fa-check-circle"></i> Official Assignment
+                  </div>
+                  <div class="ticket-body">
+                    <div class="role-label">Assigned Role</div>
+                    <div class="role-title">${data.task}</div>
+                    <div style="font-size:13px; color:#555; line-height:1.4; margin-bottom:15px;">
+                      "${data.reason}"
+                    </div>
+                    <div class="ticket-meta">
+                      <div class="meta-item">
+                        <span class="meta-lbl">NAME</span>
+                        <span class="meta-val">${data.name}</span>
+                      </div>
+                      <div class="meta-item">
+                        <span class="meta-lbl">STATUS</span>
+                        <span class="meta-val" style="color:green">CONFIRMED</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ticket-footer" onclick="window.open('https://chat.whatsapp.com/LDZkl6dXHWCGFsPsm7uzyC')">
+                    <i class="fa-brands fa-whatsapp"></i> Click to Join Team Group
+                  </div>
+                </div>
+              `;
+              confetti({ particleCount: 150, spread: 80, origin: { y: 0.7 } });
+            } else {
+              // NOT FOUND MSG
+              area.innerHTML = `
+                <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:15px; border:1px solid #ff4757; color:#ff6b81;">
+                  <i class="fa-solid fa-triangle-exclamation"></i> <strong>No Match Found</strong><br>
+                  <span style="font-size:13px; opacity:0.8">We couldn't find an assignment for this email yet.</span>
+                </div>
+              `;
+            }
+          })
+          .searchVolunteerStatus(email);
+      }
+    </script>
+  </body>
+</html>
+
